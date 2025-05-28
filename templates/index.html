@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Price Estimator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Product Price Estimator</h1>
+        <form method="POST">
+            <input type="text" name="product_name" placeholder="Enter product name to estimate price..." required>
+            <button type="submit">Estimate Price</button>
+        </form>
+
+        {% if result %}
+        <div class="result">
+            <h2>Price Estimation for: {{ product_name }}</h2>
+            {% if result is string %}
+                <p class="error">{{ result }}</p>
+            {% else %}
+                <p><strong>Product:</strong> {{ result.product_name }}</p>
+                <p><strong>Key Specifications:</strong> {{ result.details }}</p>
+                
+                {% if result.tentative_price_usd == 0.0 %}
+                    <p class="error">Price estimation failed - please try again</p>
+                {% else %}
+                    <p class="price-estimate">
+                        <strong>Estimated Market Price:</strong> 
+                        ${{ "%.2f"|format(result.tentative_price_usd) }} USD
+                    </p>
+                {% endif %}
+                
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
